@@ -1,0 +1,7 @@
+- name: Banco de dados
+  hosts: db
+  roles: [common, postgresql]
+
+- name: Servidores web
+  hosts: web
+  roles: [common, nginx]

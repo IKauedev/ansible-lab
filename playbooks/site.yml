@@ -1,0 +1,13 @@
+- name: Teste do lab
+  hosts: lab
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+    - name: Mostra hostname e SO
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }} -> {{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}"
+    - name: Cria arquivo
+      ansible.builtin.copy:
+        content: "gerenciado pelo ansible em {{ inventory_hostname }}\n"
+        dest: /etc/motd
+        mode: "0644"

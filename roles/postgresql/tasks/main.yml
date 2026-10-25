@@ -1,0 +1,21 @@
+- name: Instala PostgreSQL e driver Python
+  ansible.builtin.apt:
+    name: [postgresql, python3-psycopg2]
+    state: present
+
+- name: Garante que o cluster esta rodando
+  ansible.builtin.command: pg_ctlcluster {{ pg_version }} main start
+  args:
+    creates: /run/postgresql/{{ pg_version }}-main.pid
+
+- name: Cria o usuario
+  community.postgresql.postgresql_user:
+    name: "{{ pg_user }}"
+    password: "{{ pg_password }}"
+  become_user: postgres
+
+- name: Cria o banco com o usuario como dono
+  community.postgresql.postgresql_db:
+    name: "{{ pg_database }}"
+    owner: "{{ pg_user }}"
+  become_user: postgres

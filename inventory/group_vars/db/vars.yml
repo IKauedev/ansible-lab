@@ -1,0 +1,4 @@
+pg_version: 14
+pg_database: appdb
+pg_user: appuser
+pg_password: "{{ vault_pg_password }}"

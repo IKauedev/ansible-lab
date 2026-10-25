@@ -1,0 +1,4 @@
+<h1>{{ app_name }}</h1>
+<p>Servido por <b>{{ inventory_hostname }}</b> ({{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }})</p>
+<p>Servidores de banco no inventario: {{ groups['db'] | join(', ') }}</p>
+<p>Banco configurado: {{ hostvars[groups['db'][0]].pg_database }}</p>

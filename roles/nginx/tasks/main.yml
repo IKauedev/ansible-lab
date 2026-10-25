@@ -1,0 +1,15 @@
+- name: Instala o nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Publica a pagina inicial
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: "0644"
+
+- name: Garante que o nginx esta rodando
+  ansible.builtin.command: nginx
+  args:
+    creates: /run/nginx.pid

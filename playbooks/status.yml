@@ -1,0 +1,48 @@
+- name: Processos e portas de todos os nodes
+  hosts: lab
+  gather_facts: false
+  tasks:
+    - name: Lista processos
+      ansible.builtin.command: ps -eo pid,user,comm --sort=comm
+      register: processos
+      changed_when: false
+
+    - name: Lista portas em escuta
+      ansible.builtin.command: ss -tlnH
+      register: portas
+      changed_when: false
+
+    - name: Resumo do node
+      ansible.builtin.debug:
+        msg:
+          - "=== {{ inventory_hostname }} ==="
+          - "Processos ({{ processos.stdout_lines | length - 1 }}): {{ processos.stdout_lines[1:] | map('split') | map(attribute=2) | unique | join(', ') }}"
+          - "Portas em escuta: {{ portas.stdout_lines | map('split') | map(attribute=3) | join(', ') }}"
+
+- name: Servicos web
+  hosts: web
+  gather_facts: false
+  tasks:
+    - name: Testa o nginx
+      ansible.builtin.uri:
+        url: http://localhost
+      register: http
+      failed_when: false
+
+    - name: Resultado do nginx
+      ansible.builtin.debug:
+        msg: "nginx em {{ inventory_hostname }}: {{ 'OK (HTTP ' ~ http.status ~ ')' if http.status == 200 else 'FORA DO AR' }}"
+
+- name: Servicos de banco
+  hosts: db
+  gather_facts: false
+  tasks:
+    - name: Estado do cluster PostgreSQL
+      ansible.builtin.command: pg_lsclusters --no-header
+      register: cluster
+      changed_when: false
+      failed_when: false
+
+    - name: Resultado do PostgreSQL
+      ansible.builtin.debug:
+        msg: "PostgreSQL em {{ inventory_hostname }}: {{ cluster.stdout | default('nao encontrado') }}"

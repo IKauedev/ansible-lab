@@ -1,0 +1,4 @@
+services:
+  web1: {build: ./docker, image: ansible-lab-node, container_name: lab-web1, hostname: web1, ports: ["2201:22"], labels: {ansible.group: web}}
+  web2: {image: ansible-lab-node, container_name: lab-web2, hostname: web2, ports: ["2202:22"], labels: {ansible.group: web}}
+  db1:  {image: ansible-lab-node, container_name: lab-db1,  hostname: db1,  ports: ["2203:22"], labels: {ansible.group: db}}

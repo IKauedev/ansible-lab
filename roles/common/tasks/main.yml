@@ -1,0 +1,6 @@
+- name: Instala utilitarios basicos
+  ansible.builtin.apt:
+    name: [acl, curl, procps, iproute2]
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
